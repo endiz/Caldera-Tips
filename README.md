@@ -6,7 +6,7 @@ Tips and QOL tricks for [mitre/caldera](https://github.com/mitre/caldera)
 _Please note: These steps have been tested only on Ubuntu 22.04 LTS_
 
 ### Dependencies
-1. Update & install required system packages `sudo apt update && sudo apt upgrade -y && sudo apt install python3 git snapd -y`
+1. Update & install required system packages `sudo apt update && sudo apt upgrade -y && sudo apt install python3-dev python3-venv git snapd -y`
 
 2. Install Go & UPX `sudo snap install go --classic && sudo snap install upx`
 
