@@ -23,7 +23,9 @@ pip install setuptools wheel && pip install pyminizip donut-shellcode && pip ins
 ```
 python3 server.py --build
 ```
-If only testing or it's temporary, you can add the _--insecure_ flag `python3 server.py --build --insecure`.
+Keep note the passwords & api keys. If only testing or it's temporary, you can add the _--insecure_ flag `python3 server.py --build --insecure` and use the default red/admin credentials.
+
+Navigate to http://localhost:8888 to launch caldera and login with the creds you noted earlier.
 
 To run caldera again after the first build, the _--build_ flag is not required.
 
