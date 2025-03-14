@@ -57,7 +57,7 @@ _Please note: These steps have been tested only on Ubuntu 22.04 LTS_
 
 3. Run the download_payloads.sh file to download the required payloads and decrypt malware
    ```
-   cd plugins/emu && ./download_payloads.sh && python3 data/adversary-emulation-plans/sandworm/Resources/utilities/crypt_executables.py -i ./ -p malware --decrypt && cd ..
+   cd plugins/emu && ./download_payloads.sh && python3 data/adversary-emulation-plans/sandworm/Resources/utilities/crypt_executables.py -i ./ -p malware --decrypt
    ```
 
 4. Restart and re-build caldera to activate emu abilities & adversaries
