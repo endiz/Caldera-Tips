@@ -43,10 +43,10 @@ _Please note: These steps have been tested only on Ubuntu 22.04 LTS_
 ### Enable the emu plugin
 1. This sed command enables the emu plugin in the local.yml config file. If using the _--insecure_ flag, make sure you run the same command on the default.yml file too
    ```
-   sed -i '/- training/a\- emu' caldera/conf/local.yml
+   sed -i '/- training/a\- emu' conf/local.yml
    ```
    ```
-   sed -i '/- training/a\- emu' caldera/conf/default.yml
+   sed -i '/- training/a\- emu' conf/default.yml
    ```
 
 2. Start caldera to download the emu plugin repo
