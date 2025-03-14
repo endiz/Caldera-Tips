@@ -39,6 +39,7 @@ sed -i '/- training/a\- emu' caldera/conf/local.yml
 python3 server.py --build
 ```
 Once caldera fully starts (after the CALDERA banner), stop the server process with _CTRL+C_.
+
 3. Run the download_payloads.sh file to download the required payloads and decrypt malware
 ```
 cd plugins/emu && ./download_payloads.sh && python3 data/adversary-emulation-plans/sandworm/Resources/utilities/crypt_executables.py -i ./ -p malware --decrypt
