@@ -36,7 +36,7 @@ _Please note: These steps have been tested only on Ubuntu 22.04 LTS_
 
    Navigate to http://localhost:8888 to launch caldera and login with the creds you noted earlier.
 
-   To run caldera again after the first build, the _--build_ flag is not required.
+   To run caldera again after the first build, the _--build_ flag is not required, and make sure you have activated the virtual environment with `source .venv/bin/activate` before starting the server.
 
 ## Post install tips
 
