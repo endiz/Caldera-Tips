@@ -30,7 +30,7 @@ To run caldera again after the first build, the _--build_ flag is not required.
 ## Post install tips
 
 ### Enable the emu plugin
-1. This sed command enables the emu plugin in the local.yml config file. If using the --insecure flag, make sure you run the same command on the default.yml file too
+1. This sed command enables the emu plugin in the local.yml config file. If using the _--insecure_ flag, make sure you run the same command on the default.yml file too
 ```
 sed -i '/- training/a\- emu' caldera/conf/local.yml
 ```
