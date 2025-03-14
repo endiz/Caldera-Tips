@@ -17,3 +17,4 @@ These steps have been tested on Ubuntu 22.04 LTS.
 ### Enable the emu plugin
 1. This sed command enables the emu plugin in the local.yml config file. If using the --insecure flag, make sure you run the same command on the default.yml file too `sed -i '/- training/a\- emu' caldera/conf/local.yml`
 2. Run the download_payloads.sh file to download the required payloads and decrypt malware `cd plugins/emu && ./download_payloads.sh && python3 data/adversary-emulation-plans/sandworm/Resources/utilities/crypt_executables.py -i ./ -p malware --decrypt`
+3. Restart and re-build caldera with `python3 server.py --build` to activate emu abilities & adversaries
