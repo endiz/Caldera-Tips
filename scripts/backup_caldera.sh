@@ -12,10 +12,12 @@ if ! systemctl list-unit-files | grep -q "caldera.service"; then
     exit 1
 fi
 
+USERNAME=${SUDO_USER:-$(whoami)}
 BACKUP_DATE=$(date +%Y%m%d_%H%M%S)
-BACKUP_DIR="/home/YOUR_USERNAME/backups"
+BACKUP_DIR="/home/${USERNAME}/backups"
 LOG_FILE="/var/log/caldera.log"
-CALDERA_DIR="/home/YOUR_USERNAME/caldera"
+CALDERA_DIR="/home/${USERNAME}/caldera"
+
 mkdir -p ${BACKUP_DIR}
 echo "Stopping caldera service."
 sudo systemctl stop caldera.service

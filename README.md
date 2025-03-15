@@ -94,12 +94,12 @@ _Make sure caldera is **not** running before continuing_
 ### Run caldera at system boot - systemd
 _You must already have installed tmux as per section [tmux](#background-process---tmux)_
 
-0. If you haven't done so already, create a log file. Replace `YOUR_USERNAME` with your linux username.
+0. If you haven't done so already, create a log file.
    ```
    sudo touch /var/log/caldera.log
-   sudo chown YOUR_USERNAME:YOUR_USERNAME /var/log/caldera.log
+   sudo chown ${SUDO_USER:-$(whoami)}:${SUDO_USER:-$(whoami)} /var/log/caldera.log
    ```
-1. Create the following `caldera.service` file in `/etc/systemd/system/`. Replace `YOUR_USERNAME` with your linux username.
+1. Create the following `caldera.service` file in `/etc/systemd/system/`.
    ```
    sudo echo "[Unit]
    Description=Caldera C2 Framework
@@ -107,9 +107,9 @@ _You must already have installed tmux as per section [tmux](#background-process-
 
    [Service]
    Type=forking
-   User=YOUR_USERNAME
-   Environment=HOME=/home/YOUR_USERNAME
-   WorkingDirectory=/home/YOUR_USERNAME/caldera
+   User=${SUDO_USER:-$(whoami)}
+   Environment=HOME=/home/${SUDO_USER:-$(whoami)}
+   WorkingDirectory=/home/${SUDO_USER:-$(whoami)}/caldera
    ExecStart=/usr/bin/tmux new-session -d -s caldera 'cd ~/caldera && source .venv/bin/activate && python3 server.py'
    Restart=always
    RestartSec=3
@@ -160,6 +160,26 @@ _You must have already created a service per section [Run caldera at system boot
    ```
    sudo ./scripts/backup_caldera.sh
    ```
+3. **(optional but highly recommended)** Run backup script nightly at 4am EDT with chron
+   ```
+   sudo cp scripts/backup_caldera.sh /usr/local/sbin/backup_caldera.sh
+   sudo chmod +x /usr/local/sbin/backup_caldera.sh
+   echo "0 4 * * * /usr/local/sbin/backup_caldera.sh" | sudo tee -a /etc/crontab > /dev/null
+   ```
+
+### [install_caldera.sh](scripts/install_caldera.sh)
+
+Use this script to install dependencies, install caldera, create and start the caldera service, and create and start the caldera backup service. It is recommend to run the script on a fresh install of a Ubuntu 22.04 OS.
+
+1. Make the backup script executable
+   ```
+   chmod +x scripts/install_caldera.sh
+   ```
+2. Run install script
+   ```
+   sudo ./scripts/install_caldera.sh
+   ```
+   Check `/var/log/caldera_install.log` for details of installation.
 
 ## Notebooks
 
