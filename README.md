@@ -10,17 +10,20 @@ _Please note: These steps have been tested only on Ubuntu 22.04 LTS_
 ### Dependencies
 1. Update & install required system packages `sudo apt update && sudo apt upgrade -y && sudo apt install build-essential python3-dev python3-venv git snapd -y`
 
-2. Install Go & UPX `sudo snap install go --classic && sudo snap install upx`
+2. Ensure Go is installed with `go version`. If not installed, install it with `sudo snap install go --classic`
+
+3. Ensure UPX is installed with `snap --version`. If not installed, install it with `sudo snap install upx`
 
 3. Ensure NodeJS 16+ is installed with `node -v`. If not installed, install the LTS version with `curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash && source ~/.bashrc && nvm install --lts`
 
 ### Install
 1. Clone Caldera repo
    ```
+   sudo mkdir caldera && sudo chown -R $(whoami):$(whoami) caldera
    git clone https://github.com/mitre/caldera.git --recursive
    ```
 
-2. **(optional by highly recommended)** Create and activate virtual environment
+2. Create and activate virtual environment
    ```
    cd caldera && python3 -m venv .venv && source .venv/bin/activate
    ```
@@ -32,7 +35,7 @@ _Please note: These steps have been tested only on Ubuntu 22.04 LTS_
 
 4. Run caldera server for the first time
    ```
-   python3 server.py --build
+   cd /opt/caldera/ && python3 server.py --build
    ```
    Keep note the passwords & api keys. If only testing or it's temporary, you can add the _--insecure_ flag `python3 server.py --build --insecure` and use the default red/admin credentials.
 
@@ -46,15 +49,17 @@ _Please note: These steps have been tested only on Ubuntu 22.04 LTS_
 _Make sure caldera is **not** running before continuing_
 1. This sed command enables the emu plugin in the local.yml config file. If using the _--insecure_ flag, make sure you run the same command on the default.yml file too
    ```
+   cd /opt/caldera/
    sed -i '/- training/a\- emu' conf/local.yml
    ```
    ```
+   cd /opt/caldera/
    sed -i '/- training/a\- emu' conf/default.yml
    ```
 
 2. Start caldera to download the emu plugin repo. If using venv, make sure you activate the environment first with `source .venv/bin/activate`
    ```
-   python3 server.py --build
+   cd /opt/caldera/ && python3 server.py --build
    ```
    Once caldera fully starts (after the CALDERA banner), stop the server process with _CTRL+C_.
 
@@ -65,41 +70,40 @@ _Make sure caldera is **not** running before continuing_
 
 4. Restart and re-build caldera to activate emu abilities & adversaries
    ```
-   cd ../.. && python3 server.py --build
+   cd /opt/caldera/ && python3 server.py --build
    ```
 ### Update caldera
 _Make sure caldera is **not** running before continuing_
 1. **(optional by highly recommended)** Backup current installation to a `tar.gz` compressed file
    ```
-   tar -czvf caldera-$(date +%m-%d-%Y).tar.gz caldera
+   tar -czvf ~/caldera-$(date +%m-%d-%Y).tar.gz /opt/caldera
    ```
-2. Navigate to caldera directory and update to the latest code on github
+2. Update to the latest code on github
    ```
-   cd caldera/
+   cd /opt/caldera/
    git pull
    ```
 3. Start caldera with the `--build` flag to rebuild the cache. If using venv, make sure you activate the environment first with `source .venv/bin/activate`.
    ```
-   python3 server.py --build
+   cd /opt/caldera/ && python3 server.py --build
    ```
 ### Background process - tmux
 
 1. Ensure tmux is installed with `tmux -V`. If not, install it with `sudo apt update && sudo apt install tmux`
-2. Start a tmux session named `caldera`. If caldera is not installed in your homedir, make sure to change the relative path.
+2. Start a tmux session named `caldera`
    ```
-   tmux new-session -d -s caldera 'cd ~/caldera && source .venv/bin/activate && python3 server.py'
+   tmux new-session -d -s caldera 'cd /opt/caldera/ && source .venv/bin/activate && python3 server.py'
    ```
 3. To verify if the session is running, run `tmux ls`. To attach to the session run `tmux attach-session -t caldera`. To disconnect from a tmux session and place it in the background, press `CTRL+B` then `D`. To kill the caldera a tmux session, run `tmux kill-session -t caldera`
 
 ### Run caldera at system boot - systemd
 _You must already have installed tmux as per section [tmux](#background-process---tmux)_
 
-0. If you haven't done so already, create a log file.
+0. If you haven't done so already, create a log file
    ```
-   sudo touch /var/log/caldera.log
-   sudo chown ${SUDO_USER:-$(whoami)}:${SUDO_USER:-$(whoami)} /var/log/caldera.log
+   sudo touch /var/log/caldera.log && sudo chown $(whoami):$(whoami) /var/log/caldera.log
    ```
-1. Create the following `caldera.service` file in `/etc/systemd/system/`.
+1. Create a `caldera.service` file in `/etc/systemd/system/`
    ```
    sudo echo "[Unit]
    Description=Caldera C2 Framework
@@ -108,15 +112,13 @@ _You must already have installed tmux as per section [tmux](#background-process-
    [Service]
    Type=forking
    User=${SUDO_USER:-$(whoami)}
-   Environment=HOME=/home/${SUDO_USER:-$(whoami)}
-   WorkingDirectory=/home/${SUDO_USER:-$(whoami)}/caldera
-   ExecStart=/usr/bin/tmux new-session -d -s caldera 'cd ~/caldera && source .venv/bin/activate && python3 server.py'
+   WorkingDirectory=/opt/caldera
+   ExecStart=/usr/bin/tmux new-session -d -s caldera 'cd /opt/caldera && source .venv/bin/activate && python3 server.py'
    Restart=always
    RestartSec=3
    StandardOutput=append:/var/log/caldera.log
    StandardError=append:/var/log/caldera.log
-   ExecStartPost=/bin/bash -c 'echo \"[$(date)] Caldera service started\" >> /var/log/caldera.log'
-
+ 
    [Install]
    WantedBy=multi-user.target" | sudo tee /etc/systemd/system/caldera.service > /dev/null && sudo chmod 644 /etc/systemd/system/caldera.service
    ```
@@ -148,7 +150,7 @@ _Clone this repo with `git clone https://github.com/endiz/Caldera-Tips.git` to d
 
 ### [backup_caldera.sh](scripts/backup_caldera.sh)
 
-Use this script to stop caldera service, backup, and restart the service with tmux. 
+Use this script to stop caldera service, backup, and restart the service
 
 _You must have already created a service per section [Run caldera at system boot - systemd](#run-caldera-at-system-boot---systemd)_
 
@@ -164,12 +166,13 @@ _You must have already created a service per section [Run caldera at system boot
    ```
    sudo cp scripts/backup_caldera.sh /usr/local/sbin/backup_caldera.sh
    sudo chmod +x /usr/local/sbin/backup_caldera.sh
-   echo "0 4 * * * /usr/local/sbin/backup_caldera.sh" | sudo tee -a /etc/crontab > /dev/null
+   echo "# Caldera C2 Framework
+   0  4    * * *   root    /usr/local/sbin/backup_caldera.sh" | sudo tee -a /etc/crontab > /dev/null
    ```
 
 ### [install_caldera.sh](scripts/install_caldera.sh)
 
-Use this script to install all dependencies, create a virtual environment, install caldera with default plugins, create and start the caldera service, and create a caldera backup cron job and log. It is recommended to run the script on a fresh install of a Ubuntu 22.04 OS.
+Use this script to install all dependencies, create a virtual environment, install caldera with default plugins, create and start the caldera service, and create a caldera backup cron job and log. This script has only been tested with a fresh install of Ubuntu 22.04 OS. Other OS's based on debian may work.
 
 1. Make the backup script executable
    ```
@@ -184,7 +187,7 @@ Use this script to install all dependencies, create a virtual environment, insta
 ## Notebooks
 
 ### [examples_api_caldera.ipynb](notebooks/examples_api_caldera.ipynb)
-Jupyter Notebook to interact with caldera using the API.
+Jupyter Notebook to interact with caldera using the API
 
 ## Errors & bug fixing
 

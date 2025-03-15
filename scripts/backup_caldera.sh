@@ -14,9 +14,9 @@ fi
 
 USERNAME=${SUDO_USER:-$(whoami)}
 BACKUP_DATE=$(date +%Y%m%d_%H%M%S)
-BACKUP_DIR="/home/${USERNAME}/backups"
+BACKUP_DIR="/var/backups/caldera"
 LOG_FILE="/var/log/caldera.log"
-CALDERA_DIR="/home/${USERNAME}/caldera"
+CALDERA_DIR="/opt/caldera"
 
 mkdir -p ${BACKUP_DIR}
 echo "Stopping caldera service."
@@ -24,9 +24,10 @@ sudo systemctl stop caldera.service
 cd $(dirname ${CALDERA_DIR})
 echo "Starting caldera backup."
 tar -czf ${BACKUP_DIR}/caldera_backup_${BACKUP_DATE}.tar.gz $(basename ${CALDERA_DIR})
-echo "[$(date)] Caldera backup created: ${BACKUP_DIR}/caldera_backup_${BACKUP_DATE}.tar.gz" >> ${LOG_FILE}
+BACKUP_SIZE=$(du -h ${BACKUP_DIR}/caldera_backup_${BACKUP_DATE}.tar.gz | cut -f1)
+echo "[$(date)] Caldera backup created: ${BACKUP_DIR}/caldera_backup_${BACKUP_DATE}.tar.gz Size: ${BACKUP_SIZE}" >> ${LOG_FILE}
 # Keep only last 5 backups
 cd ${BACKUP_DIR} && ls -t caldera_backup_*.tar.gz | tail -n +6 | xargs -r rm
-echo "Caldera backup created: ${BACKUP_DIR}/caldera_backup_${BACKUP_DATE}.tar.gz. Last 5 backups kept."
+echo "Caldera backup created: ${BACKUP_DIR}/caldera_backup_${BACKUP_DATE}.tar.gz. Size: ${BACKUP_SIZE}. Last 5 backups kept."
 echo "Starting caldera service"
 sudo systemctl start caldera.service
