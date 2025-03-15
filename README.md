@@ -160,7 +160,7 @@ _You must have already created a service per section [Run caldera at system boot
    ```
    sudo ./scripts/backup_caldera.sh
    ```
-3. **(optional but highly recommended)** Run backup script nightly at 4am EDT with cron
+3. **(optional but highly recommended)** Run backup script nightly at 4am EDT with a cron job
    ```
    sudo cp scripts/backup_caldera.sh /usr/local/sbin/backup_caldera.sh
    sudo chmod +x /usr/local/sbin/backup_caldera.sh
@@ -169,7 +169,7 @@ _You must have already created a service per section [Run caldera at system boot
 
 ### [install_caldera.sh](scripts/install_caldera.sh)
 
-Use this script to install dependencies, install caldera, create and start the caldera service, and create and start the caldera backup service. It is recommend to run the script on a fresh install of a Ubuntu 22.04 OS.
+Use this script to install all dependencies, create a virtual environment, install caldera with default plugins, create and start the caldera service, and create a caldera backup cron job and log. It is recommended to run the script on a fresh install of a Ubuntu 22.04 OS.
 
 1. Make the backup script executable
    ```
