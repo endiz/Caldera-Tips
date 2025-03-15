@@ -106,7 +106,7 @@ _You must already have installed tmux as per section [tmux](#background-process-
 1. Create a `caldera.service` file in `/etc/systemd/system/`
    ```
    sudo echo "[Unit]
-   Description=Caldera C2 Framework
+   Description=Caldera Adversary Emulation Platform
    After=network.target
 
    [Service]
@@ -166,7 +166,7 @@ _You must have already created a service per section [Run caldera at system boot
    ```
    sudo cp scripts/backup_caldera.sh /usr/local/sbin/backup_caldera.sh
    sudo chmod +x /usr/local/sbin/backup_caldera.sh
-   echo "# Caldera C2 Framework
+   echo "# Caldera Adversary Emulation Platform
    0  4    * * *   root    /usr/local/sbin/backup_caldera.sh" | sudo tee -a /etc/crontab > /dev/null
    ```
 
