@@ -160,7 +160,7 @@ _You must have already created a service per section [Run caldera at system boot
    ```
    sudo ./scripts/backup_caldera.sh
    ```
-3. **(optional but highly recommended)** Run backup script nightly at 4am EDT with chron
+3. **(optional but highly recommended)** Run backup script nightly at 4am EDT with cron
    ```
    sudo cp scripts/backup_caldera.sh /usr/local/sbin/backup_caldera.sh
    sudo chmod +x /usr/local/sbin/backup_caldera.sh
