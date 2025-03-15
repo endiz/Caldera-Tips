@@ -1,7 +1,7 @@
 # Caldera-Tips
 Tips and QOL tricks for [mitre/caldera](https://github.com/mitre/caldera). 
 
-You can either follow along this guide section by section, or clone the repo with to use the [scripts](#scripts) on your system.
+You can either follow along this guide section by section, or clone the repo to use the [scripts](#scripts) on your system.
 
 ## Caldera fresh install
 
